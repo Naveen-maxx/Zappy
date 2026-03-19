@@ -1,0 +1,115 @@
+{
+  "name": "zappy-project",
+  "version": "1.0.0",
+  "description": "MCP configuration for Zappy - Real-time multiplayer quiz platform",
+  "project": {
+    "name": "Zappy",
+    "type": "web-application",
+    "framework": "react-vite-typescript",
+    "backend": "supabase"
+  },
+  "environment": {
+    "variables": {
+      "required": [
+        {
+          "name": "VITE_SUPABASE_URL",
+          "description": "Supabase project URL",
+          "type": "string",
+          "source": "supabase-dashboard",
+          "location": "Settings → API → Project URL"
+        },
+        {
+          "name": "VITE_SUPABASE_PUBLISHABLE_KEY",
+          "description": "Supabase anon/public key for client-side authentication",
+          "type": "string",
+          "source": "supabase-dashboard",
+          "location": "Settings → API → anon public key",
+          "security": "safe-for-frontend"
+        }
+      ],
+      "supabaseEdgeFunctions": [
+        {
+          "name": "GEMINI_API_KEY",
+          "description": "Google Gemini API key for quiz generation",
+          "type": "string",
+          "source": "google-ai-studio",
+          "location": "Supabase Dashboard → Edge Functions → Settings → Environment Variables",
+          "security": "secret-backend-only"
+        },
+        {
+          "name": "SUPABASE_SERVICE_ROLE_KEY",
+          "description": "Supabase service role key for server-side operations",
+          "type": "string",
+          "source": "supabase-dashboard",
+          "location": "Settings → API → service_role key",
+          "security": "secret-backend-only"
+        },
+        {
+          "name": "SUPABASE_URL",
+          "description": "Supabase project URL for Edge Functions",
+          "type": "string",
+          "source": "supabase-dashboard",
+          "location": "Settings → API → Project URL"
+        }
+      ]
+    },
+    "files": {
+      "local": ".env.local",
+      "example": ".env.example",
+      "gitignore": true
+    }
+  },
+  "supabase": {
+    "projectId": "abknijwddrbyrgunyaig",
+    "functions": [
+      {
+        "name": "generate-quiz",
+        "path": "supabase/functions/generate-quiz",
+        "description": "AI-powered quiz generation using Google Gemini",
+        "cors": {
+          "allowedOrigins": [
+            "http://localhost:*",
+            "http://127.0.0.1:*"
+          ],
+          "production": "configure-in-function"
+        }
+      }
+    ],
+    "migrations": {
+      "path": "supabase/migrations",
+      "count": 15
+    }
+  },
+  "development": {
+    "port": 8080,
+    "host": "::",
+    "commands": {
+      "dev": "npm run dev",
+      "build": "npm run build",
+      "preview": "npm run preview",
+      "lint": "npm run lint"
+    }
+  },
+  "setup": {
+    "steps": [
+      "1. Create .env.local with VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY",
+      "2. Set Supabase Edge Function environment variables in dashboard",
+      "3. Run database migrations (supabase db push or manual SQL)",
+      "4. Deploy Edge Functions (supabase functions deploy generate-quiz)",
+      "5. Start dev server (npm run dev)"
+    ],
+    "documentation": [
+      "cursor-migration.md",
+      "SETUP_ENV.md",
+      "README.md"
+    ]
+  },
+  "features": {
+    "authentication": "supabase-auth",
+    "database": "supabase-postgresql",
+    "realtime": "socket-io",
+    "ai": "google-gemini",
+    "ui": "shadcn-ui"
+  }
+}
+

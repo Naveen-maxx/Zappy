@@ -1,0 +1,246 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark neon gaming theme */
+    --background: 250 30% 6%;
+    --foreground: 0 0% 98%;
+
+    --card: 250 25% 10%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 250 25% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 280 100% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 190 100% 50%;
+    --secondary-foreground: 250 30% 6%;
+
+    --muted: 250 20% 18%;
+    --muted-foreground: 250 10% 60%;
+
+    --accent: 320 100% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 140 70% 50%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 45 100% 55%;
+    --warning-foreground: 250 30% 6%;
+
+    --destructive: 0 80% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 250 20% 20%;
+    --input: 250 20% 15%;
+    --ring: 280 100% 65%;
+
+    --radius: 1rem;
+
+    /* Quiz answer colors - Kahoot style */
+    --answer-red: 0 85% 55%;
+    --answer-blue: 210 100% 55%;
+    --answer-green: 142 70% 40%;
+    --answer-yellow: 45 100% 50%;
+
+    /* Neon glows */
+    --glow-primary: 280 100% 65%;
+    --glow-secondary: 190 100% 50%;
+    --glow-accent: 320 100% 60%;
+
+    /* Sidebar */
+    --sidebar-background: 250 25% 8%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 280 100% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 250 20% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 250 20% 20%;
+    --sidebar-ring: 280 100% 65%;
+  }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 250 30% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 250 30% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 250 30% 10%;
+
+    --primary: 280 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 190 100% 40%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 250 10% 92%;
+    --muted-foreground: 250 10% 40%;
+
+    --accent: 320 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 140 70% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 45 100% 45%;
+    --warning-foreground: 250 30% 10%;
+
+    --destructive: 0 80% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 250 10% 85%;
+    --input: 250 10% 90%;
+    --ring: 280 100% 50%;
+
+    /* Sidebar light mode */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 250 30% 10%;
+    --sidebar-primary: 280 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 250 10% 92%;
+    --sidebar-accent-foreground: 250 30% 10%;
+    --sidebar-border: 250 10% 85%;
+    --sidebar-ring: 280 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50 shadow-xl;
+  }
+
+  .neon-glow {
+    box-shadow: 
+      0 0 20px hsl(var(--glow-primary) / 0.3),
+      0 0 40px hsl(var(--glow-primary) / 0.2),
+      0 0 60px hsl(var(--glow-primary) / 0.1);
+  }
+
+  .neon-glow-secondary {
+    box-shadow: 
+      0 0 20px hsl(var(--glow-secondary) / 0.3),
+      0 0 40px hsl(var(--glow-secondary) / 0.2),
+      0 0 60px hsl(var(--glow-secondary) / 0.1);
+  }
+
+  .neon-text {
+    text-shadow: 
+      0 0 10px hsl(var(--glow-primary) / 0.8),
+      0 0 20px hsl(var(--glow-primary) / 0.5),
+      0 0 30px hsl(var(--glow-primary) / 0.3);
+  }
+
+  .answer-btn {
+    @apply relative overflow-hidden font-display font-bold text-lg md:text-xl py-6 md:py-8 rounded-2xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  .answer-red {
+    @apply bg-[hsl(var(--answer-red))] hover:bg-[hsl(var(--answer-red))]/90 text-white;
+  }
+
+  .answer-blue {
+    @apply bg-[hsl(var(--answer-blue))] hover:bg-[hsl(var(--answer-blue))]/90 text-white;
+  }
+
+  .answer-green {
+    @apply bg-[hsl(var(--answer-green))] hover:bg-[hsl(var(--answer-green))]/90 text-white;
+  }
+
+  .answer-yellow {
+    @apply bg-[hsl(var(--answer-yellow))] hover:bg-[hsl(var(--answer-yellow))]/90 text-white;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent;
+  }
+
+  .floating {
+    animation: floating 3s ease-in-out infinite;
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}
+
+@keyframes floating {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px hsl(var(--glow-primary) / 0.4),
+      0 0 40px hsl(var(--glow-primary) / 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px hsl(var(--glow-primary) / 0.6),
+      0 0 60px hsl(var(--glow-primary) / 0.4),
+      0 0 80px hsl(var(--glow-primary) / 0.2);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes countdown {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 283;
+  }
+}

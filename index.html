@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <title>Zappy - Live Quiz Platform</title>
+  <meta name="description"
+    content="Create AI-powered quizzes, host live game rooms, and compete with players worldwide!" />
+  <meta name="author" content="Zappy" />
+
+  <meta property="og:title" content="Zappy - Live Quiz Platform" />
+  <meta property="og:description"
+    content="Create AI-powered quizzes, host live game rooms, and compete with players worldwide!" />
+  <meta property="og:type" content="website" />
+  <!-- Update with your own Open Graph image URL -->
+  <meta property="og:image" content="/placeholder.svg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <!-- Update with your Twitter handle -->
+  <meta name="twitter:site" content="@Zappy" />
+  <!-- Update with your own Twitter image URL -->
+  <meta name="twitter:image" content="/placeholder.svg" />
+</head>
+
+<body>
+  <!-- Temporary Debug Script -->
+  <script>
+    window.addEventListener('error', function (event) {
+      document.body.innerHTML = '<div style="background:red;color:white;padding:20px;font-family:monospace;"><h1>Runtime Error</h1><pre>' + event.message + '\n' + event.filename + ':' + event.lineno + '</pre></div>';
+    });
+    window.addEventListener('unhandledrejection', function (event) {
+      document.body.innerHTML = '<div style="background:red;color:white;padding:20px;font-family:monospace;"><h1>Unhandled Rejection</h1><pre>' + event.reason + '</pre></div>';
+    });
+  </script>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+project_id = "abknijwddrbyrgunyaig"
+
+[functions.generate-quiz]
+verify_jwt = false

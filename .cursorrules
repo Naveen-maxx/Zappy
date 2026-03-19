@@ -1,0 +1,43 @@
+# Cursor Rules for Zappy Project
+
+## Project Context
+This is a real-time multiplayer quiz platform built with React, TypeScript, Vite, and Supabase.
+
+## Key Technologies
+- Frontend: React 18 + TypeScript + Vite
+- UI: shadcn/ui components (Radix UI)
+- Backend: Supabase (PostgreSQL, Auth, Edge Functions)
+- Styling: Tailwind CSS
+- Real-time: Socket.io
+- AI: Google Gemini API
+
+## Environment Variables Required
+The project requires these environment variables in `.env.local`:
+- VITE_SUPABASE_URL: Supabase project URL
+- VITE_SUPABASE_PUBLISHABLE_KEY: Supabase anon/public key
+
+## Supabase Edge Function Environment Variables
+Set these in Supabase Dashboard → Edge Functions → Settings:
+- GEMINI_API_KEY: Google Gemini API key
+- SUPABASE_SERVICE_ROLE_KEY: Supabase service role key
+- SUPABASE_URL: Supabase project URL
+
+## Project Structure
+- `/src/components/game/`: Game-specific components
+- `/src/pages/`: Page components (routes)
+- `/src/integrations/supabase/`: Supabase client configuration
+- `/supabase/functions/`: Edge Functions
+- `/supabase/migrations/`: Database migrations
+
+## Important Notes
+- Always use TypeScript types from `/src/types/`
+- Use shadcn/ui components from `/src/components/ui/`
+- Supabase client is configured in `/src/integrations/supabase/client.ts`
+- CORS configuration is in `/supabase/functions/generate-quiz/index.ts`
+
+## Development Workflow
+1. Ensure `.env.local` exists with Supabase credentials
+2. Run `npm install` to install dependencies
+3. Run `npm run dev` to start development server
+4. Database migrations are in `/supabase/migrations/`
+
