@@ -764,10 +764,25 @@ export default function LiveQuiz() {
     }
   };
 
-  const handleTimeUp = () => {
+  const handleTimeUp = async () => {
     if (selectedAnswer === null) {
       setIsCorrect(false);
       setPointsEarned(0);
+    }
+    
+    // DEAD-MAN'S SWITCH
+    // If the host abruptly disconnected, they won't trigger the transition.
+    // By having the client trigger the locking RPC upon timer completion, 
+    // the game securely forces the state to Results for everyone simultaneously!
+    if (roomId && phase === 'question') {
+      try {
+        await (supabase.rpc as any)('process_question_results', {
+          p_room_id: roomId,
+          p_question_index: questionIndex
+        });
+      } catch (err) {
+        console.error('Error triggering fallback sync:', err);
+      }
     }
   };
 
