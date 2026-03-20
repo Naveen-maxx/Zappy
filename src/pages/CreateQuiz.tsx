@@ -12,6 +12,7 @@ import {
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { CodeSnippetEditor } from '@/components/game/CodeSnippetEditor';
 
 import { Question as GameQuestion, QuestionType } from '@/types/game';
 
@@ -797,12 +798,11 @@ export default function CreateQuiz() {
                         <Label className="text-xs text-muted-foreground ml-1 mb-1.5 block uppercase tracking-wider font-bold">
                           Code Snippet (with error)
                         </Label>
-                        <Textarea
+                        <CodeSnippetEditor
                           placeholder="// Paste your code here..."
                           value={question.codeSnippet || ''}
-                          onChange={(e) => updateQuestion(question.id, { codeSnippet: e.target.value })}
-                          className="font-mono text-sm bg-black/40 border-white/10 min-h-[200px]"
-                          spellCheck={false}
+                          onChange={(val) => updateQuestion(question.id, { codeSnippet: val })}
+                          className="min-h-[250px]"
                         />
                       </div>
 

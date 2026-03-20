@@ -73,10 +73,10 @@ export function QuestionDisplay({
               <code>
                 {codeSnippet.split('\n').map((line, i) => (
                   <div key={i} className="table-row">
-                    <span className="table-cell text-right pr-4 select-none text-white/20 w-8 border-r border-white/10 mr-4">
+                    <span className="table-cell text-right pr-4 select-none text-white/40 min-w-[2.5rem] border-r border-white/10 opacity-70">
                       {i + 1}
                     </span>
-                    <span className="table-cell pl-4 whitespace-pre-wrap break-all">
+                    <span className="table-cell pl-4 whitespace-pre-wrap break-all py-0.5">
                       {line || '\n'}
                     </span>
                   </div>

@@ -510,6 +510,7 @@ export default function LiveQuiz() {
           setTimerKey((prev) => prev + 1);
           questionIndexRef.current = newIndex;
           submitLockRef.current = false;
+          setDebugLineInput('');
         }
         return;
       }
@@ -544,6 +545,8 @@ export default function LiveQuiz() {
           setPointsEarned(0);
           setTimerKey((prev) => prev + 1);
           questionIndexRef.current = newIndex;
+          submitLockRef.current = false;
+          setDebugLineInput('');
         }
         return;
       }
