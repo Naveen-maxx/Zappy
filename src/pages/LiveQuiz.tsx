@@ -122,6 +122,7 @@ export default function LiveQuiz() {
   // Refs to avoid stale closures inside realtime callbacks
   const questionIndexRef = useRef(0);
   const selectedAnswerRef = useRef<number | null>(null);
+  const submitLockRef = useRef(false);
 
   useEffect(() => {
     questionIndexRef.current = questionIndex;
@@ -501,13 +502,14 @@ export default function LiveQuiz() {
           fetchMyTeamInfo();
         }
 
-        // If it's a new question, reset answer state
+        // If it’s a new question, reset answer state + restart timer
         if (newIndex !== prevIndex) {
           setSelectedAnswer(null);
           setIsCorrect(null);
           setPointsEarned(0);
           setTimerKey((prev) => prev + 1);
           questionIndexRef.current = newIndex;
+          submitLockRef.current = false;
         }
         return;
       }
@@ -853,6 +855,9 @@ export default function LiveQuiz() {
   };
 
   const handleAnswerSelect = async (index: number) => {
+    // Defend against rapid double-clicks bypassing React state updates
+    if (submitLockRef.current) return;
+
     // In Co-op mode, only team leader can submit
     if (gameMode === 'coop' && !isTeamLeader) {
       toast.error('Only the team leader can submit the answer!');
@@ -867,6 +872,8 @@ export default function LiveQuiz() {
 
     if (selectedAnswer !== null || phase !== 'question' || !currentQuestion || !roomId || !participantDbId) return;
 
+    // Instant synchronous lock
+    submitLockRef.current = true;
     setSelectedAnswer(index);
 
     try {
@@ -888,11 +895,13 @@ export default function LiveQuiz() {
         } else {
           toast.error('Failed to submit answer');
         }
+        submitLockRef.current = false;
         setSelectedAnswer(null); // Allow retry
       }
     } catch (error) {
       console.error('Error submitting answer:', error);
       toast.error('Failed to submit answer');
+      submitLockRef.current = false;
       setSelectedAnswer(null); // Allow retry
     }
   };
