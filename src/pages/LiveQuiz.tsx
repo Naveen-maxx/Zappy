@@ -698,12 +698,14 @@ export default function LiveQuiz() {
     return () => clearInterval(interval);
   }, [phase, discussionEndsAt, gameMode]);
 
-  // Subscribe to game state changes (realtime)
+  // Subscribe to game state changes (realtime) and Broadcast Presence
   useEffect(() => {
     if (!roomId) return;
 
     const channel = supabase
-      .channel(`live_game_${roomId}`)
+      .channel(`live_game_${roomId}`, {
+        config: { presence: { key: participantDbId || 'guest' } }
+      })
       .on(
         'postgres_changes',
         {
@@ -720,14 +722,56 @@ export default function LiveQuiz() {
           }
         }
       )
-      .subscribe((status) => {
+      .subscribe(async (status) => {
         console.log('Realtime subscription status:', status);
+        // Announce presence so the Host can monitor if we disconnect
+        if (status === 'SUBSCRIBED' && participantDbId) {
+          await channel.track({
+            participantId: participantDbId,
+            onlineAt: new Date().toISOString()
+          });
+        }
       });
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [roomId, handleGameStateUpdate]);
+  }, [roomId, handleGameStateUpdate, participantDbId]);
+
+  // Subscribe to team leadership changes (crucial for auto-reassignment if leader drops)
+  useEffect(() => {
+    if (!teamId || !participantDbId || (gameMode !== 'coop' && gameMode !== 'team')) return;
+
+    const teamChannel = supabase
+      .channel(`team_updates_${teamId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'teams',
+          filter: `id=eq.${teamId}`,
+        },
+        (payload) => {
+          if (payload.new) {
+            const updatedTeam = payload.new as any;
+            const newIsLeader = updatedTeam.leader_id === participantDbId;
+            
+            setIsTeamLeader((prev) => {
+              if (!prev && newIsLeader) {
+                toast.success("Connection dropped: You have been auto-promoted to Team Leader!");
+              }
+              return newIsLeader;
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(teamChannel);
+    };
+  }, [teamId, participantDbId, gameMode]);
 
   // Poll fallback and Instant Tab-Return Sync
   // Throttled setInterval prevents getting stuck if realtime is flaky

@@ -411,6 +411,60 @@ export default function HostGame() {
     return () => cleanup();
   }, [roomId, phase]);
 
+  // Listen for participant connection drops to auto-reassign Co-op Team Leaders
+  useEffect(() => {
+    // Only matters during active team/coop game phases
+    if (!roomId || phase === 'lobby' || (gameMode !== 'coop' && gameMode !== 'team') || phase === 'finished') return;
+
+    const channel = supabase.channel(`live_game_${roomId}`);
+
+    channel
+      .on('presence', { event: 'leave' }, async ({ leftPresences }) => {
+        for (const presence of leftPresences) {
+          const droppedParticipantId = presence.participantId;
+          if (!droppedParticipantId) continue;
+
+          // Verify if this dropped player was actively holding a team leader role
+          const { data: team } = await supabase
+            .from('teams')
+            .select('id, name, leader_id')
+            .eq('leader_id', droppedParticipantId)
+            .maybeSingle();
+
+          if (team) {
+            console.log(`Leader connection dropped for ${team.name}. Auto-reassigning...`);
+            
+            // Find a surviving team member to promote
+            const { data: survivingMembers } = await supabase
+              .from('room_participants')
+              .select('id, name')
+              .eq('team_id', team.id)
+              .neq('id', droppedParticipantId)
+              .limit(1);
+
+            if (survivingMembers && survivingMembers.length > 0) {
+              const newLeader = survivingMembers[0];
+              
+              // Promote them instantly
+              const { error } = await supabase
+                .from('teams')
+                .update({ leader_id: newLeader.id })
+                .eq('id', team.id);
+
+              if (!error) {
+                toast.info(`${newLeader.name} is the new leader of ${team.name}`);
+              }
+            }
+          }
+        }
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [roomId, phase, gameMode]);
+
   // Subscribe to real-time answer submissions
   useEffect(() => {
     if (!roomId || phase !== 'question') return;
