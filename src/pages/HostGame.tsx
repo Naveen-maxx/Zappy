@@ -873,7 +873,7 @@ export default function HostGame() {
       if (gameMode === 'coop') {
         setDiscussionTimerKey(prev => prev + 1);
       }
-      setQuestionStats({ totalAnswers: 0, answerCounts: [0, 0, 0, 0] });
+      setQuestionStats({ totalAnswers: 0, answerCounts: {} });
       isProcessingResults.current = false;
       // Host sees discussion phase for Co-op
       setPhase(nextPhase === 'discussion' ? 'discussion' : 'question');
