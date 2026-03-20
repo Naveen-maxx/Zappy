@@ -345,6 +345,19 @@ export default function HostGame() {
 
       fetchParticipants();
 
+      // Instant Tab-Return Sync for Participants
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === 'visible') {
+          console.log('Tab visible: fetching participants');
+          fetchParticipants();
+        }
+      };
+      
+      const handleFocus = () => fetchParticipants();
+
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      window.addEventListener('focus', handleFocus);
+
       const channel = supabase
         .channel(`host_room_${roomId}`)
         .on(
@@ -388,7 +401,11 @@ export default function HostGame() {
         )
         .subscribe();
 
-      cleanup = () => supabase.removeChannel(channel);
+      cleanup = () => {
+        supabase.removeChannel(channel);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('focus', handleFocus);
+      };
     }
 
     return () => cleanup();
@@ -424,6 +441,16 @@ export default function HostGame() {
 
     fetchInitialStats();
 
+    // Instant Tab-Return Sync for Answers
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchInitialStats();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', fetchInitialStats);
+
     const channel = supabase
       .channel(`answers_${roomId}_${currentQuestionIndex}`)
       .on(
@@ -455,6 +482,8 @@ export default function HostGame() {
     return () => {
       isMounted = false;
       supabase.removeChannel(channel);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', fetchInitialStats);
     };
   }, [roomId, phase, currentQuestionIndex]);
 

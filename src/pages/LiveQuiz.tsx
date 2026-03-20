@@ -729,11 +729,13 @@ export default function LiveQuiz() {
     };
   }, [roomId, handleGameStateUpdate]);
 
-  // Poll fallback (prevents getting stuck if realtime is flaky)
+  // Poll fallback and Instant Tab-Return Sync
+  // Throttled setInterval prevents getting stuck if realtime is flaky
+  // Window focus instantly forces an update so players returning to the app never see stale data
   useEffect(() => {
     if (!roomId) return;
 
-    const interval = window.setInterval(async () => {
+    const fetchLatestState = async () => {
       const { data } = await supabase
         .from('game_state')
         .select('*')
@@ -741,9 +743,29 @@ export default function LiveQuiz() {
         .maybeSingle();
 
       if (data) handleGameStateUpdate(data as unknown as GameState);
-    }, 2500);
+    };
 
-    return () => window.clearInterval(interval);
+    // 1. Regular polling fallback
+    const interval = window.setInterval(fetchLatestState, 2500);
+
+    // 2. Instant sync when user returns to app/tab
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('Tab became visible again - instantly syncing game state...');
+        fetchLatestState();
+      }
+    };
+    
+    const handleFocus = () => fetchLatestState();
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, [roomId, handleGameStateUpdate, phase, questionIndex]);
 
   const handleRenameTeam = async () => {
