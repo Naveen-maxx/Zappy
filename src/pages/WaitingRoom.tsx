@@ -261,7 +261,7 @@ export default function WaitingRoom() {
             console.log('Setting phase to:', gameState.phase);
             setPhase(gameState.phase);
           }
-          if (gameState?.phase === 'instructions' || gameState?.phase === 'question' || gameState?.phase === 'discussion') {
+          if (gameState?.phase === 'instructions' || gameState?.phase === 'question' || gameState?.phase === 'discussion' || gameState?.phase === 'team_naming') {
             // Game has started, navigate to live quiz
             toast.success('Game is starting!');
             navigate(`/play/${roomCode}`, {
@@ -288,7 +288,7 @@ export default function WaitingRoom() {
         console.log('Initial check: phase is:', data.phase);
         setPhase(data.phase);
       }
-      if (data?.phase === 'instructions' || data?.phase === 'question' || data?.phase === 'discussion' || data?.phase === 'results' || data?.phase === 'leaderboard') {
+      if (data?.phase === 'instructions' || data?.phase === 'question' || data?.phase === 'discussion' || data?.phase === 'results' || data?.phase === 'leaderboard' || data?.phase === 'team_naming') {
         navigate(`/play/${roomCode}`, {
           state: {
             roomId,

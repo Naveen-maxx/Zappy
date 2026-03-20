@@ -12,6 +12,7 @@ import {
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { CodeSnippetEditor } from '@/components/game/CodeSnippetEditor';
 
 import { Question as GameQuestion, QuestionType } from '@/types/game';
@@ -660,21 +661,25 @@ export default function CreateQuiz() {
           <p className="text-muted-foreground mb-4">
             Enter a topic and let AI generate questions for you instantly!
           </p>
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Input
-                placeholder="e.g., World History, Space Exploration, Pop Music..."
-                value={aiTopic}
-                onChange={(e) => setAiTopic(e.target.value)}
-                className="flex-1"
-              />
-              <div className="flex items-center gap-2">
-                <Label htmlFor="questionCount" className="whitespace-nowrap text-sm">Questions:</Label>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="aiTopic" className="text-sm font-medium">Topic</Label>
+                <Input
+                  id="aiTopic"
+                  placeholder="e.g., World History, Space Exploration, Pop Music..."
+                  value={aiTopic}
+                  onChange={(e) => setAiTopic(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="questionCount" className="text-sm font-medium">Questions</Label>
                 <select
                   id="questionCount"
                   value={questionCount}
                   onChange={(e) => setQuestionCount(Number(e.target.value))}
-                  className="bg-muted rounded-md px-3 py-2 text-sm min-w-[70px]"
+                  className="bg-muted rounded-md px-3 py-2 text-sm min-w-[100px] h-10 border-none focus:ring-2 focus:ring-primary"
                 >
                   {[5, 10, 15, 20].map(n => (
                     <option key={n} value={n}>{n}</option>
@@ -685,7 +690,7 @@ export default function CreateQuiz() {
             <Button
               onClick={generateWithAI}
               disabled={isGenerating}
-              className="neon-glow whitespace-nowrap w-full sm:w-auto"
+              className="neon-glow w-full md:w-fit md:px-8 h-11"
             >
               {isGenerating ? (
                 <>
@@ -714,15 +719,16 @@ export default function CreateQuiz() {
                 layout
                 className="glass-card rounded-2xl p-6"
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                   <div className="flex items-center gap-3">
-                    <GripVertical className="w-5 h-5 text-muted-foreground cursor-grab" />
-                    <span className="font-display font-bold text-lg">
+                    <GripVertical className="w-5 h-5 text-muted-foreground cursor-grab shrink-0" />
+                    <span className="font-display font-bold text-lg whitespace-nowrap">
                       Question {qIndex + 1}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-2 mr-2">
+                  
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <div className="flex items-center gap-2 flex-grow sm:flex-grow-0">
                       <Label htmlFor={`type-${question.id}`} className="sr-only">Type</Label>
                       <select
                         id={`type-${question.id}`}
@@ -747,35 +753,38 @@ export default function CreateQuiz() {
                             })
                           });
                         }}
-                        className="bg-muted rounded-md px-3 py-1 text-sm font-medium border-none focus:ring-1 focus:ring-primary"
+                        className="bg-muted rounded-md px-3 py-1.5 text-sm font-medium border-none focus:ring-1 focus:ring-primary h-9 w-full sm:w-auto"
                       >
                         <option value="multiple-choice">Multiple Choice</option>
                         <option value="code-debug">Code Debug</option>
                       </select>
                     </div>
 
-                    <select
-                      value={question.timeLimit}
-                      onChange={(e) => updateQuestion(question.id, { timeLimit: Number(e.target.value) })}
-                      className="bg-muted rounded-md px-3 py-1 text-sm"
-                    >
-                      <option value={10}>10s</option>
-                      <option value={20}>20s</option>
-                      <option value={30}>30s</option>
-                      <option value={60}>60s</option>
-                      <option value={90}>90s</option>
-                      <option value={120}>2m</option>
-                    </select>
-                    {questions.length > 1 && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeQuestion(question.id)}
-                        className="text-destructive hover:text-destructive"
+                    <div className="flex items-center gap-2">
+                      <select
+                        value={question.timeLimit}
+                        onChange={(e) => updateQuestion(question.id, { timeLimit: Number(e.target.value) })}
+                        className="bg-muted rounded-md px-3 py-1.5 text-sm h-9 font-medium"
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    )}
+                        <option value={10}>10s</option>
+                        <option value={20}>20s</option>
+                        <option value={30}>30s</option>
+                        <option value={60}>60s</option>
+                        <option value={90}>90s</option>
+                        <option value={120}>2m</option>
+                      </select>
+                      
+                      {questions.length > 1 && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeQuestion(question.id)}
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10 h-9 w-9 shrink-0"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -907,27 +916,34 @@ export default function CreateQuiz() {
                 </div>
 
                 {question.type === 'multiple-choice' && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                     {question.options.map((option, oIndex) => (
                       <div
                         key={oIndex}
-                        className={`relative rounded-xl overflow-hidden ${answerColors[oIndex]}`}
+                        className={cn(
+                          "relative rounded-xl overflow-hidden transition-all border-2",
+                          question.correctIndex === oIndex ? "border-white/50 shadow-md" : "border-transparent",
+                          answerColors[oIndex]
+                        )}
                       >
                         <Input
                           placeholder={`Option ${oIndex + 1}`}
                           value={option}
                           onChange={(e) => updateOption(question.id, oIndex, e.target.value)}
-                          className="bg-transparent border-0 text-white placeholder:text-white/60 pr-12"
+                          className="bg-transparent border-0 text-white placeholder:text-white/70 pr-12 h-12 text-base"
                         />
                         <button
                           type="button"
                           onClick={() => updateQuestion(question.id, { correctIndex: oIndex })}
-                          className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all ${question.correctIndex === oIndex
-                            ? 'bg-white text-green-600'
-                            : 'bg-white/20 text-white/60 hover:bg-white/30'
-                            }`}
+                          className={cn(
+                            "absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all",
+                            question.correctIndex === oIndex
+                              ? "bg-white text-green-600 scale-110 shadow-lg"
+                              : "bg-white/20 text-white/80 hover:bg-white/30"
+                          )}
+                          title="Mark as correct"
                         >
-                          <Check className="w-4 h-4" />
+                          <Check className={cn("w-4 h-4", question.correctIndex === oIndex ? "stroke-[3px]" : "")} />
                         </button>
                       </div>
                     ))}

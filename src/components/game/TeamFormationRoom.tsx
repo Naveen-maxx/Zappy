@@ -115,17 +115,17 @@ export function TeamFormationRoom({
     };
 
     const handleRenameTeam = async () => {
-        if (!teamToRename || !newTeamName.trim()) return;
+        if (!teamToRename || !newTeamName.trim() || !myParticipantId) return;
 
         try {
-            const { data, error } = await supabase
-                .from('teams')
-                .update({ name: newTeamName.trim() })
-                .eq('id', teamToRename.id)
-                .select();
+            const { data: success, error } = await (supabase.rpc as any)('rename_team', {
+                p_team_id: teamToRename.id,
+                p_participant_id: myParticipantId,
+                p_new_name: newTeamName.trim(),
+            });
 
             if (error) throw error;
-            if (!data || data.length === 0) {
+            if (!success) {
                 throw new Error('Permission denied: You cannot rename this team.');
             }
 

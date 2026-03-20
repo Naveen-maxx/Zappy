@@ -409,42 +409,7 @@ export default function LiveQuiz() {
         if (!teamId) {
           fetchMyTeamInfo();
         }
-        // Force leader check update
-        if (participantDbId && teamId) {
-          const checkLeader = async () => {
-            const { data: team } = await supabase
-              .from('teams')
-              .select('leader_id, name')
-              .eq('id', teamId)
-              .single();
 
-            if (team) {
-              setIsTeamLeader(team.leader_id === participantDbId);
-              // Pre-fill team name for leader if they haven't started typing
-              if (team.leader_id === participantDbId && !newTeamName) {
-                setNewTeamName(team.name);
-              }
-            }
-          };
-          checkLeader();
-        }
-
-        return;
-      }
-
-
-      // Handle team naming phase
-      if (state.phase === 'team_naming') {
-        setPhase('team_naming');
-        setIsDiscussionPhase(false);
-        if (state.discussion_ends_at) {
-          setDiscussionEndsAt(new Date(state.discussion_ends_at));
-        }
-
-        // Ensure team info is fetched so we know if user is leader
-        if (!teamId) {
-          fetchMyTeamInfo();
-        }
         // Force leader check update
         if (participantDbId && teamId) {
           const checkLeader = async () => {
@@ -818,15 +783,20 @@ export default function LiveQuiz() {
   }, [roomId, handleGameStateUpdate, phase, questionIndex]);
 
   const handleRenameTeam = async () => {
-    if (!teamId || !newTeamName.trim()) return;
+    if (!teamId || !newTeamName.trim() || !participantDbId) return;
 
     try {
-      const { error } = await supabase
-        .from('teams')
-        .update({ name: newTeamName.trim() })
-        .eq('id', teamId);
+      const { data: success, error } = await (supabase.rpc as any)('rename_team', {
+        p_team_id: teamId,
+        p_participant_id: participantDbId,
+        p_new_name: newTeamName.trim(),
+      });
 
       if (error) throw error;
+      if (!success) {
+        throw new Error('Permission denied: You cannot rename this team.');
+      }
+
       toast.success('Team renamed!');
       setIsNamingModalOpen(false);
     } catch (error) {

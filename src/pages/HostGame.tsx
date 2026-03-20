@@ -371,12 +371,7 @@ export default function HostGame() {
           (payload) => {
             if (payload.eventType === 'INSERT') {
               const p = payload.new as any;
-
-              // If we have a session snapshot, only allow if they are in it
-              // OR if it's a legitimate late-join (which adds them to the set)
-              // For now, let's allow all inserts to support late joining, but add them to the set
               sessionParticipantIds.current.add(p.id);
-
               setParticipants(prev => {
                 if (prev.some(existing => existing.id === p.id)) return prev;
                 return [...prev, {
@@ -384,8 +379,12 @@ export default function HostGame() {
                   name: p.name,
                   avatarId: p.avatar_id,
                   score: p.score || 0,
+                  currentStreak: 0,
+                  maxStreak: 0
                 }];
               });
+              // Update teams too if in team mode
+              if (gameMode !== 'classic') fetchTeamsWithMembers();
             } else if (payload.eventType === 'UPDATE') {
               const p = payload.new as any;
               setParticipants(prev => prev.map(existing =>
@@ -393,16 +392,36 @@ export default function HostGame() {
                   ? { ...existing, score: p.score, currentStreak: p.current_streak, maxStreak: p.max_streak }
                   : existing
               ));
+              // If team assignment or score changed, update teams too
+              if (gameMode !== 'classic') fetchTeamsWithMembers();
             } else if (payload.eventType === 'DELETE') {
               const p = payload.old as any;
               setParticipants(prev => prev.filter(existing => existing.id !== p.id));
+              if (gameMode !== 'classic') fetchTeamsWithMembers();
             }
+          }
+        )
+        .subscribe();
+
+      const teamsChannel = supabase
+        .channel(`host_teams_${roomId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'teams',
+            filter: `room_id=eq.${roomId}`,
+          },
+          () => {
+            if (gameMode !== 'classic') fetchTeamsWithMembers();
           }
         )
         .subscribe();
 
       cleanup = () => {
         supabase.removeChannel(channel);
+        supabase.removeChannel(teamsChannel);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
         window.removeEventListener('focus', handleFocus);
       };
