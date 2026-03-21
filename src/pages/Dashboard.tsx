@@ -172,7 +172,7 @@ export default function Dashboard() {
             Zappy
           </Link>
           <div className="flex items-center gap-4">
-            <span className="text-muted-foreground hidden sm:block">
+            <span className="text-muted-foreground text-sm sm:text-base truncate max-w-[180px] sm:max-w-none">
               Hey, <span className="text-foreground font-medium">{profile?.name || user?.email || 'Creator'}</span>!
             </span>
             <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Log out">

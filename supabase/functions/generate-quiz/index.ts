@@ -5,6 +5,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 // Update this array with your production domain(s)
 const ALLOWED_ORIGINS = [
   // Add your production domain(s) here, e.g.:
+  'https://zappy-quiz.vercel.app'
   // 'https://yourdomain.com',
   // 'https://www.yourdomain.com',
 ];
