@@ -116,7 +116,7 @@ export default function JoinGame() {
       // Find the game room by code
       const { data: room, error: roomError } = await supabase
         .from('game_rooms')
-        .select('id, status')
+        .select('id, status, is_locked')
         .eq('room_code', roomCode.toUpperCase())
         .maybeSingle();
 
@@ -130,6 +130,12 @@ export default function JoinGame() {
 
       if (room.status !== 'waiting') {
         toast.error('This game has already started or ended.');
+        setIsJoining(false);
+        return;
+      }
+
+      if (room.is_locked) {
+        toast.error('This room has been locked by the host.');
         setIsJoining(false);
         return;
       }

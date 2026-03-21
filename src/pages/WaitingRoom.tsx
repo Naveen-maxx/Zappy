@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { AnimatedAvatar } from '@/components/game/AnimatedAvatar';
 import { EmojiReactionBar, FloatingReactions } from '@/components/game/EmojiReactions';
 import { supabase } from '@/integrations/supabase/client';
-import { Zap, Users, Copy, Check, Volume2, VolumeX, Gamepad2, LogOut, AlertCircle } from 'lucide-react';
+import { Zap, Users, Copy, Check, Volume2, VolumeX, Gamepad2, LogOut, AlertCircle, Lock, Unlock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { TeamFormationRoom } from '@/components/game/TeamFormationRoom';
@@ -100,6 +100,7 @@ export default function WaitingRoom() {
   const [roomNotFound, setRoomNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [phase, setPhase] = useState<string>('waiting');
+  const [isLocked, setIsLocked] = useState(false);
 
   console.log('Current WaitingRoom phase:', phase);
 
@@ -117,7 +118,7 @@ export default function WaitingRoom() {
         // First get the room ID and game mode
         const { data: room, error: roomError } = await supabase
           .from('game_rooms')
-          .select('id, game_mode, status')
+          .select('id, game_mode, status, is_locked')
           .eq('room_code', roomCode.toUpperCase())
           .maybeSingle();
 
@@ -148,6 +149,7 @@ export default function WaitingRoom() {
 
         setRoomId(room.id);
         setGameMode((room.game_mode as 'classic' | 'team' | 'coop') || 'classic');
+        setIsLocked(room.is_locked || false);
 
         // Fetch participants that joined recently (within last 2 hours - active session)
         const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
@@ -320,19 +322,30 @@ export default function WaitingRoom() {
           filter: `id=eq.${roomId}`,
         },
         (payload) => {
-          const updatedRoom = payload.new as { game_mode: string };
-          const newMode = updatedRoom.game_mode as 'classic' | 'team' | 'coop';
+          const updatedRoom = payload.new as { game_mode?: string, is_locked?: boolean };
+          
+          if (updatedRoom.game_mode) {
+            const newMode = updatedRoom.game_mode as 'classic' | 'team' | 'coop';
+            if (newMode !== gameMode) {
+              setGameMode(newMode);
 
-          if (newMode !== gameMode) {
-            setGameMode(newMode);
+              // Show announcement
+              const modeName = newMode === 'coop' ? 'Co-op Mode 🤝' : newMode === 'team' ? 'Team Mode 👥' : 'Classic Mode 🎯';
+              setModeAnnouncement(`Host changed game mode to ${modeName}`);
+              toast.info(`Game mode changed to ${modeName}`);
 
-            // Show announcement
-            const modeName = newMode === 'coop' ? 'Co-op Mode 🤝' : newMode === 'team' ? 'Team Mode 👥' : 'Classic Mode 🎯';
-            setModeAnnouncement(`Host changed game mode to ${modeName}`);
-            toast.info(`Game mode changed to ${modeName}`);
+              // Clear announcement after delay
+              setTimeout(() => setModeAnnouncement(null), 4000);
+            }
+          }
 
-            // Clear announcement after delay
-            setTimeout(() => setModeAnnouncement(null), 4000);
+          if (updatedRoom.is_locked !== undefined && updatedRoom.is_locked !== isLocked) {
+            setIsLocked(updatedRoom.is_locked);
+            if (updatedRoom.is_locked) {
+              toast.error('The host has locked the room.', { icon: <Lock className="w-4 h-4 text-destructive" /> });
+            } else {
+              toast.success('The host has unlocked the room.', { icon: <Unlock className="w-4 h-4 text-success" /> });
+            }
           }
         }
       )
@@ -341,7 +354,7 @@ export default function WaitingRoom() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [roomId, gameMode]);
+  }, [roomId, gameMode, isLocked]);
 
   const copyRoomCode = () => {
     navigator.clipboard.writeText(roomCode || '');
