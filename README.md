@@ -1,195 +1,167 @@
-# Zappy - Live Quiz Platform
+<div align="center">
+  <br />
+  <h1>⚡ Zappy</h1>
+  <p><strong>A Next-Generation Real-Time Multiplayer Quiz & Learning Platform</strong></p>
+  <br />
+</div>
 
-A real-time multiplayer quiz platform where you can create AI-powered quizzes, host live game rooms, and compete with players worldwide!
+## 📖 Project Overview
 
-## Features
+**Zappy** is a modern, real-time multiplayer quiz platform designed to make learning, testing, and team-building genuinely engaging. Whether you're hosting a classroom review session, running a coding bootcamp assessment, or just having fun with friends, Zappy provides a seamless, high-performance environment for live interactive games.
 
-- 🎮 **Real-time Multiplayer Quizzes**: Host and join live quiz games
-- 🤖 **AI-Powered Quiz Generation**: Create quizzes instantly using Google Gemini AI
-- 👥 **Team Support**: Play in teams with team leaderboards
-- 📊 **Live Leaderboards**: Real-time scoring and rankings
-- 🎨 **Modern UI**: Beautiful, responsive interface with dark/light theme support
-- 📱 **Mobile Friendly**: Works seamlessly on all devices
+With built-in AI question generation and specialized collaborative game modes, Zappy goes beyond traditional multiple-choice trivia to offer deep, engaging, and cooperative challenges.
 
-## Tech Stack
+---
 
-- **Frontend**: React 18 + TypeScript + Vite
-- **UI Components**: shadcn/ui (Radix UI)
-- **Styling**: Tailwind CSS
-- **Backend**: Supabase (PostgreSQL, Auth, Edge Functions)
-- **Real-time**: Socket.io
-- **AI**: Google Gemini API
-- **Animations**: Framer Motion
+## 🤔 Problem Statement
 
-## Prerequisites
+While platforms like Kahoot! popularized the live quiz genre, they often come with significant limitations:
 
-Before you begin, ensure you have:
+*   **Paced Only for Speed:** They heavily prioritize fast clicking over thoughtful collaboration or deep problem-solving.
+*   **Limited Question Formats:** Traditional platforms struggle with complex topics like coding, where understanding logic is more important than spotting the right keyword.
+*   **Isolation in Learning:** Participants typically compete solely as individuals, missing out on the educational benefits of peer discussion and teamwork.
+*   **Tedious Quiz Creation:** Educators spend hours manually writing questions, distractors, and formatting content.
 
-- **Node.js** 18+ installed ([install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
-- **npm** or **bun** package manager
-- **Supabase account** and project
-- **Google Gemini API key** (for quiz generation)
+### The Zappy Solution
+Zappy solves these problems by introducing **collaborative game modes** (Team and Co-Op), specialized question types like **Code Debug Mode**, and integrating **AI** to generate high-quality quizzes in seconds.
 
-## Getting Started
+---
+
+## ✨ Key Highlights
+
+Zappy introduces unique features that set it apart from traditional quiz platforms:
+
+*   🐛 **Code Debug Mode:** Designed specifically for developers and coding bootcamps. Instead of standard text options, participants are presented with a code snippet containing a bug. They must analyze the code and identify the exact line where the error occurs.
+*   👥 **Team Mode:** Host creates teams, and participants join their designated squads. Teams are given a dedicated "Discussion Phase" with real-time private team chat to debate the answer before the Team Leader submits the final choice.
+*   🤝 **Co-Op Mode (Cooperative Racing):** A high-stakes collaborative mode. Participants are still split into teams, but the first team where *everyone* submits the correct answer wins the round. It encourages fast communication and peer teaching.
+*   🤖 **AI Quiz Generator:** Powered by Google Gemini. Just type a topic (e.g., "React Hooks" or "World War II History"), and Zappy will instantly generate a full, classroom-safe quiz with questions, correct answers, and plausible distractors.
+
+---
+
+## 🎯 All Features List
+
+*   **Real-time Synchronization:** Sub-second latency for game state, timers, and live leaderboards using WebSockets/Supabase Realtime.
+*   **Multiple Game Modes:** Classic (Individual), Team Mode, and Co-Op Mode.
+*   **Dynamic Question Types:** Standard Multiple Choice and Code Debug.
+*   **Host Control Panel:** Full control over game pacing, manual phase advancing, and live leaderboard reveals.
+*   **Real-time Team Chat:** Private chat rooms for team members during discussion phases.
+*   **Emoji Reactions:** Floating, real-time emoji reactions in waiting rooms.
+*   **Animated Avatars:** Customizable animated avatars for participants.
+*   **Premium UI/UX:** Built with a modern aesthetic, featuring glassmorphism, dynamic animations, and full Dark/Light mode support.
+*   **Mobile Responsive:** A flawless, app-like experience on mobile browsers.
+*   **Guest Access:** No forced sign-ups for participants—just enter a room code and play.
+
+---
+
+## 🛠 Tech Stack
+
+Zappy is built with a modern, scalable, and type-safe architecture.
+
+**Frontend:**
+*   **Framework:** React 18 + Vite
+*   **Language:** TypeScript
+*   **Styling:** Tailwind CSS + `cn` utility merging
+*   **Components:** shadcn/ui (Radix UI primitives)
+*   **Animations:** Framer Motion
+*   **Icons:** Lucide-React
+
+**Backend & Infrastructure:**
+*   **Database:** Supabase (PostgreSQL)
+*   **Real-time:** Supabase Realtime (WebSockets)
+*   **Authentication:** Supabase Auth
+*   **Serverless:** Supabase Edge Functions (Deno)
+
+**AI Integration:**
+*   **LLM:** Google Gemini API (Flash/Lite models)
+
+---
+
+## 🎮 How to Play
+
+### For the Host
+1.  Log in to the Zappy dashboard.
+2.  Click **Create Quiz** (write it yourself or let the AI generate it).
+3.  Click **Host Live** to open a game room.
+4.  Select the **Game Mode** (Classic, Team, Co-Op) and wait for players to join.
+5.  Control the flow of the game, review live results, and reveal the leaderboard!
+
+### For the Participant
+1.  Go to the Zappy homepage.
+2.  Enter the **6-digit Game PIN** provided by your host.
+3.  Enter your nickname and pick an avatar.
+4.  Join the waiting lobby. Once the host starts, answer questions on your device.
+    *   *If in Team Mode:* Use the team chat to discuss the answer before the timer runs out!
+
+---
+
+## 🚀 Installation & Setup Guide
+
+Want to run Zappy locally or contribute? Follow these steps.
+
+### Prerequisites
+*   [Node.js](https://nodejs.org/) (v18 or higher)
+*   [npm](https://www.npmjs.com/) or [bun](https://bun.sh/)
+*   A [Supabase](https://supabase.com/) account and project
+*   A [Google Gemini API Key](https://aistudio.google.com/app/apikey)
 
 ### 1. Clone the Repository
-
 ```bash
 git clone <your-repo-url>
 cd Zappy
 ```
 
 ### 2. Install Dependencies
-
 ```bash
 npm install
 # or
 bun install
 ```
 
-### 3. Set Up Supabase
-
-1. Create a new project at [supabase.com](https://supabase.com)
-2. Get your project credentials from **Project Settings → API**:
-   - Project URL
-   - Anon/public key
-   - Service role key (keep this secret!)
-
-### 4. Configure Environment Variables
-
-Create a `.env.local` file in the `Zappy` directory:
-
+### 3. Configure Environment Variables
+Create a `.env.local` file in the root directory and add your Supabase public keys:
 ```env
-# Supabase Configuration
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
 ```
 
-**Important**: The `GEMINI_API_KEY` and `SUPABASE_SERVICE_ROLE_KEY` should be set in your Supabase project's Edge Functions environment variables (not in `.env.local`). See step 5.
-
-### 5. Set Up Supabase Edge Functions
-
-1. Go to your Supabase Dashboard
-2. Navigate to **Edge Functions → Settings**
-3. Add the following environment variables:
-   - `GEMINI_API_KEY`: Your Google Gemini API key ([get one here](https://makersuite.google.com/app/apikey))
-   - `SUPABASE_SERVICE_ROLE_KEY`: Your service role key
-   - `SUPABASE_URL`: Your Supabase project URL
-
-### 6. Run Database Migrations
-
-You have two options:
-
-**Option A: Using Supabase CLI** (Recommended)
-
+### 4. Database Setup (Supabase)
+Link the project to your Supabase instance and push the database migrations:
 ```bash
-# Install Supabase CLI
+# Install the Supabase CLI globally if you haven't
 npm install -g supabase
 
-# Link to your project
+# Login and link your project
+supabase login
 supabase link --project-ref your-project-ref
 
-# Run migrations
+# Push the database schema and RPCs
 supabase db push
 ```
 
-**Option B: Manual Migration**
+### 5. Setup AI Edge Function
+To enable the AI Quiz Generator, configure your Edge Function in Supabase.
 
-1. Go to your Supabase Dashboard
-2. Navigate to **SQL Editor**
-3. Run all SQL files from `supabase/migrations/` in order
+1.  Go to your Supabase Dashboard -> **Edge Functions** -> **Secrets**.
+2.  Add the following secrets:
+    *   `GEMINI_API_KEY`: Your Google Gemini API Key.
+    *   `SUPABASE_URL`: Your Supabase project URL.
+    *   `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase Service Role Key.
+3.  Deploy the function via the CLI:
+    ```bash
+    supabase functions deploy generate-quiz
+    ```
 
-### 7. Deploy Supabase Edge Function
-
-Deploy the quiz generation function:
-
-```bash
-supabase functions deploy generate-quiz
-```
-
-Or use the Supabase Dashboard:
-1. Go to **Edge Functions**
-2. Create a new function called `generate-quiz`
-3. Copy the contents of `supabase/functions/generate-quiz/index.ts`
-
-### 8. Start Development Server
-
+### 6. Start the Development Server
 ```bash
 npm run dev
 # or
 bun run dev
 ```
+The application will be available at `http://localhost:8080`.
 
-The application will be available at `http://localhost:8080`
+---
 
-## Available Scripts
+<div align="center">
+  <p>Built with ❤️ for interactive learning.</p>
+</div>
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run build:dev` - Build in development mode
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-
-## Project Structure
-
-```
-Zappy/
-├── src/
-│   ├── components/      # React components
-│   ├── contexts/        # React contexts
-│   ├── hooks/          # Custom hooks
-│   ├── integrations/   # External services
-│   ├── pages/          # Page components
-│   └── types/          # TypeScript types
-├── supabase/
-│   ├── functions/      # Edge Functions
-│   └── migrations/     # Database migrations
-└── public/             # Static assets
-```
-
-## Troubleshooting
-
-### Environment Variables Not Working
-
-- Ensure your `.env.local` file is in the `Zappy` directory (not the parent directory)
-- Vite requires the `VITE_` prefix for environment variables
-- Restart the dev server after changing environment variables
-
-### CORS Errors
-
-If you encounter CORS errors when calling the `generate-quiz` function:
-
-1. Update the CORS configuration in `supabase/functions/generate-quiz/index.ts`
-2. Add your local development URL to the `ALLOWED_ORIGINS` array
-3. Redeploy the function
-
-### Authentication Issues
-
-- Verify your Supabase URL and keys are correct
-- Ensure Email authentication is enabled in Supabase Dashboard → Authentication → Providers
-- Check browser console for detailed error messages
-
-### Database Migration Errors
-
-- Ensure your Supabase project is properly linked
-- Check that you have the necessary permissions
-- Try running migrations manually in the Supabase SQL Editor
-
-## Production Deployment
-
-1. **Update CORS**: Add your production domain to `ALLOWED_ORIGINS` in `supabase/functions/generate-quiz/index.ts`
-2. **Set Environment Variables**: Configure production environment variables in your hosting platform
-3. **Build**: Run `npm run build`
-4. **Deploy**: Deploy the `dist` folder to your hosting platform (Vercel, Netlify, etc.)
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is private and proprietary.
-
-## Support
-
-For issues and questions, please open an issue in the repository.
