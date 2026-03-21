@@ -372,7 +372,10 @@ export function TeamChat({
                   isOwn ? 'ml-auto items-end' : 'items-start'
                 )}
               >
-                <span className="text-[10px] text-muted-foreground mb-0.5">
+                <span className={cn(
+                  "text-[10px] font-medium mb-0.5",
+                  isOwn ? "text-primary/70" : "text-muted-foreground"
+                )}>
                   {isOwn ? 'You' : (nameByParticipantId[msg.participantId] || msg.participantName || 'Teammate')}
                 </span>
                 <div

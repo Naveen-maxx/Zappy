@@ -136,7 +136,7 @@ export const HostCard = forwardRef<HTMLDivElement, HostCardProps>(({
                             Start your own game
                         </p>
                         <div className="px-4 py-1.5 bg-white text-black rounded-lg font-bold font-mono text-sm shadow-lg">
-                            zappy.app
+                            zappy
                         </div>
                     </div>
                 </div>

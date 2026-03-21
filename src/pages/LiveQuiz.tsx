@@ -187,8 +187,8 @@ export default function LiveQuiz() {
               setTeamId(participant.team_id);
               setParticipantName(participant.name);
 
-              // Store in local storage for future retrieval just in case auth fails
-              localStorage.setItem(`zappy_participant_${room.id}`, participant.id);
+              // Store in session storage for future retrieval
+              sessionStorage.setItem(`zappy_participant_${room.id}`, participant.id);
 
               // Check if user is team leader
               if (participant.team_id) {
@@ -202,10 +202,10 @@ export default function LiveQuiz() {
               }
             }
           } else if (roomId) {
-            // Fallback: Check local storage for guest session
-            const savedId = localStorage.getItem(`zappy_participant_${roomId}`);
+            // Fallback: Check session storage for guest session
+            const savedId = sessionStorage.getItem(`zappy_participant_${roomId}`);
             if (savedId) {
-              console.log('Recovered participant ID from localStorage:', savedId);
+              console.log('Recovered participant ID from sessionStorage:', savedId);
               setParticipantDbId(savedId);
 
               // Fetch team info for this guest

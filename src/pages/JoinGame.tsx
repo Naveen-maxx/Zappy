@@ -165,7 +165,7 @@ export default function JoinGame() {
 
           const dbId = existingParticipant?.id;
           if (dbId) {
-            localStorage.setItem(`zappy_participant_${room.id}`, dbId);
+            sessionStorage.setItem(`zappy_participant_${room.id}`, dbId);
           }
 
           // Navigate to waiting room with existing participant info
@@ -187,7 +187,7 @@ export default function JoinGame() {
 
       const newParticipantDbId = participantData?.id;
       if (newParticipantDbId) {
-        localStorage.setItem(`zappy_participant_${room.id}`, newParticipantDbId);
+        sessionStorage.setItem(`zappy_participant_${room.id}`, newParticipantDbId);
       }
 
       // Navigate to waiting room with participant info

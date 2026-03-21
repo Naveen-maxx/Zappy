@@ -517,7 +517,7 @@ export default function WaitingRoom() {
               </motion.div>
 
               <h1 className="font-display text-3xl md:text-4xl font-bold mb-6">
-                Join at <span className="gradient-text">zappy.app</span>
+                Join at <span className="gradient-text">zappy</span>
               </h1>
 
               {/* Room code card */}

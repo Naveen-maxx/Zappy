@@ -28,7 +28,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <div className="fixed bottom-4 right-4 z-[100]">
+            <div className="fixed bottom-5 left-5 z-[100]">
               <ThemeToggle />
             </div>
             <Routes>

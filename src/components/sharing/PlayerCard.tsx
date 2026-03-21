@@ -140,7 +140,7 @@ export const PlayerCard = forwardRef<HTMLDivElement, PlayerCardProps>(({
                             Think you can beat me? <span className="text-2xl">😏</span>
                         </p>
                         <div className="inline-block px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-bold shadow-lg shadow-blue-500/20">
-                            Play now at zappy.app
+                            Play now at zappy
                         </div>
                     </div>
                 </div>
